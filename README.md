@@ -1,4 +1,4 @@
-## Demonstrate potential wrong Identity due to eventual consistency issues
+## Demonstrate network cache-based identity could be mistaken due to eventual consistency issues
 
 ### Setup
 
