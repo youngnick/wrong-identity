@@ -1,3 +1,43 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: sleep-v1
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: sleep-v2
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sleep-v1
+  labels:
+    app: sleep
+    service: sleep
+spec:
+  ports:
+  - port: 80
+    name: http
+  selector:
+    app: sleep
+    version: v1
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sleep-v2
+  labels:
+    app: sleep
+    service: sleep
+spec:
+  ports:
+  - port: 80
+    name: http
+  selector:
+    app: sleep
+    version: v2
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -25,6 +65,7 @@ spec:
                       - helloworld
               topologyKey: kubernetes.io/hostname
       terminationGracePeriodSeconds: 0
+      serviceAccountName: sleep-v1
       containers:
       - name: sleep
         image: docker.io/curlimages/curl
@@ -58,6 +99,7 @@ spec:
                       - helloworld
               topologyKey: kubernetes.io/hostname
       terminationGracePeriodSeconds: 0
+      serviceAccountName: sleep-v2
       containers:
       - name: sleep
         image: docker.io/curlimages/curl

@@ -5,13 +5,11 @@ metadata:
 spec:
   endpointSelector:
     matchLabels:
-      app: helloworld
-      version: v1
+      io.cilium.k8s.policy.serviceaccount: helloworld-v1
   ingress:
   - fromEndpoints:
     - matchLabels:
-        app: sleep
-        version: v1
+        io.cilium.k8s.policy.serviceaccount: sleep-v1
     toPorts:
     - ports:
       - port: "5000"
@@ -24,13 +22,11 @@ metadata:
 spec:
   endpointSelector:
     matchLabels:
-      app: helloworld
-      version: v2
+      io.cilium.k8s.policy.serviceaccount: helloworld-v2
   ingress:
   - fromEndpoints:
     - matchLabels:
-        app: sleep
-        version: v2
+        io.cilium.k8s.policy.serviceaccount: sleep-v2
     toPorts:
     - ports:
       - port: "5000"

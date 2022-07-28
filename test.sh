@@ -10,7 +10,7 @@ kubectl rollout status deployment/sleep-v2
 kubectl rollout status deployment/helloworld-v1
 kubectl rollout status deployment/helloworld-v2
 
-# Show that v1 talks only to v1 and v1 only to v2.
+# Show that v1 talks only to v1 and v2 only to v2.
 for i in 1 2; do
     for j in 1 2; do
         echo Trying to connect from deploy/sleep-v$i to helloworld-v$j
@@ -35,7 +35,7 @@ SLEEPV1_ID=$(kubectl get ciliumendpoints.cilium.io -l app=sleep,version=v1 -o js
 
 echo "Security identity for sleep-v1 is $SLEEPV1_ID. CiliumIdentity:"
 kubectl get ciliumidentities.cilium.io $SLEEPV1_ID -o yaml
-echo""
+echo ""
 
 API_SERVER=$(kubectl get service -n default kubernetes -o=jsonpath='{.spec.clusterIP}')
 API_SERVEREP=$(kubectl get endpoints -n default kubernetes -o jsonpath='{.subsets[0].addresses[0].ip}')
@@ -71,7 +71,7 @@ while true; do
     if [ -z "$SLEEPV2POD" ]; then
         echo "Matching sleep-v2 not found yet - retrying rollout"
         kubectl rollout restart deployment/sleep-v2
-        # rollout status is reall verbose, so send output to /dev/null
+        # rollout status is really verbose, so send output to /dev/null
         kubectl rollout status deployment/sleep-v2 > /dev/null
     else
         break
