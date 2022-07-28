@@ -1,0 +1,37 @@
+apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
+metadata:
+  name: "v1"
+spec:
+  endpointSelector:
+    matchLabels:
+      app: helloworld
+      version: v1
+  ingress:
+  - fromEndpoints:
+    - matchLabels:
+        app: sleep
+        version: v1
+    toPorts:
+    - ports:
+      - port: "5000"
+        protocol: TCP
+---
+apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
+metadata:
+  name: "v2"
+spec:
+  endpointSelector:
+    matchLabels:
+      app: helloworld
+      version: v2
+  ingress:
+  - fromEndpoints:
+    - matchLabels:
+        app: sleep
+        version: v2
+    toPorts:
+    - ports:
+      - port: "5000"
+        protocol: TCP
