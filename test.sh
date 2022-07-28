@@ -30,7 +30,7 @@ echo "Here is the current ip cache for agent $AGENT_POD in node $NODEV1:"
 kubectl exec -n kube-system $AGENT_POD -c cilium-agent -- cilium map get cilium_ipcache
 echo ""
 
-# get the identity of sleep v1:
+# get the identity of sleep-v1:
 SLEEPV1_ID=$(kubectl get ciliumendpoints.cilium.io -l app=sleep,version=v1 -o jsonpath='{.items[0].status.identity.id}')
 
 echo "Security identity for sleep-v1 is $SLEEPV1_ID. CiliumIdentity:"
@@ -49,9 +49,9 @@ echo "Now that the ip-cache cannot be updated, we can rotate sleep-v2 pods, unti
 echo "ip that used to belong to sleep-v1."
 echo ""
 
-# scale sleepv1 to 0
+# scale sleep-v1 to 0
 kubectl scale deploy sleep-v1 --replicas=0
-# scale sleepv2 to 15
+# scale sleep-v2 to 15
 kubectl scale deploy sleep-v2 --replicas=15
 
 # rotate sleep-v2 pods until we get a sleep-v2 pod with ip of sleep-v1
@@ -63,7 +63,7 @@ while true; do
             SLEEPV2POD=""
         else
             echo ""
-            echo "Found sleep v2 pod $SLEEPV2POD ip $ip"
+            echo "Found sleep-v2 pod $SLEEPV2POD ip $ip"
             break
         fi
     done
@@ -95,6 +95,6 @@ echo ""
 echo "Current ip cache:"
 docker exec $NODEV1 /bin/bash -c 'crictl exec $(crictl ps --name cilium-agent -q) cilium map get cilium_ipcache'
 echo ""
-echo "Specifically, note the identity of the sleep v2 pod's IP:"
+echo "Specifically, note the identity of the sleep-v2 pod's IP:"
 docker exec $NODEV1 /bin/bash -c 'crictl exec $(crictl ps --name cilium-agent -q) cilium map get cilium_ipcache' | grep $ip
 echo "and compare to above ip cache and identity."
