@@ -1,15 +1,14 @@
 ## Demonstrate potential wrong Identity due to eventual consistency issues
 
-The setup is:
+### Setup
 
-sleep v1 is allowed to talk to hello v1, and
-sleep v2 is allowed to talk to hello v2.
+sleep v1 is allowed to talk to helloworld v1, and sleep v2 is allowed to talk to helloworld v2.
 
-We demonstrate eventual consistency issue by simulating an "outage" and making the node hello v1 is on to not be able to reach the k8s api server. This means that the cilium agent is unable to update its IP cache when pods rotate.
+We demonstrate eventual consistency issue by simulating an "outage" and making the node helloworld v1 is on to not be able to reach the k8s api server. This means that the cilium agent is unable to update its IP cache when pods rotate.
 
-Then we scale sleepv1 to zero, and re-rollout sleepv2 until it uses recycled sleepv1 IP.
+Then we scale sleep v1 to zero, and re-rollout sleep v2 until it uses a recycled sleep v1 IP.
 
-We then curl from the sleepv2 pod with the recycled IP to hello v1 successfully, against the policy.
+We then curl from the sleep v2 pod with the recycled IP to helloworld v1 successfully, against the policy.
 
 Note that pod traffic is encrypted with wireguard.
 
