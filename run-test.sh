@@ -1,3 +1,4 @@
+#!/bin/bash
 # Note: the content in this file is a subset from test.sh 
 # Find the all the IPs of sleep-v1:
 SLEEPV1_IPs=$(kubectl get pod -l app=sleep,version=v1 -o json | jq -r '.items[]|.status.podIP')
@@ -41,8 +42,8 @@ done
 # but will succeed because the ip-cache is not up to date.
 echo ""
 echo "Trying to curl from sleep-v2 to helloworld-v1. running:"
-echo kubectl exec $SLEEPV2POD -- curl -s http://helloworld-v1:5000/hello --max-time 2
-(kubectl exec $SLEEPV2POD -- curl -s http://helloworld-v1:5000/hello --max-time 2 && echo "Connection success.")|| echo "Connection Failed."
+echo kubectl exec $SLEEPV2POD -- curl -s http://helloworld-v1:5000/hello --max-time 10
+(kubectl exec $SLEEPV2POD -- curl -s http://helloworld-v1:5000/hello --max-time 10 && echo "Connection success.")|| echo "Connection Failed."
 echo ""
 echo ""
 

@@ -2,9 +2,6 @@
 # helm repo add cilium https://helm.cilium.io/
 set -x
 
-docker pull quay.io/cilium/cilium:v1.12.0
-
-
 kindConfig="
 kind: Cluster
 apiVersion: kind.x-k8s.io/v1alpha4
@@ -18,6 +15,8 @@ networking:
 "
 
 kind create cluster --config=- <<<"${kindConfig[@]}"
+
+docker pull quay.io/cilium/cilium:v1.12.0
 kind load docker-image quay.io/cilium/cilium:v1.12.0
 
 helm install cilium cilium/cilium --version 1.12.0 \
