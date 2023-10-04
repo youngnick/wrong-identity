@@ -1,6 +1,9 @@
+#!/bin/bash
 
 # helm repo add cilium https://helm.cilium.io/
 set -x
+
+ciliumVersion="1.14.0"
 
 kindConfig="
 kind: Cluster
@@ -16,10 +19,10 @@ networking:
 
 kind create cluster --config=- <<<"${kindConfig[@]}"
 
-docker pull quay.io/cilium/cilium:v1.12.0
-kind load docker-image quay.io/cilium/cilium:v1.12.0
+docker pull quay.io/cilium/cilium:v${ciliumVersion}
+kind load docker-image quay.io/cilium/cilium:v${ciliumVersion}
 
-helm install cilium cilium/cilium --version 1.12.0 \
+helm install cilium cilium/cilium --version ${ciliumVersion} \
   --namespace kube-system \
   --set socketLB.enabled=false \
   --set externalIPs.enabled=true \

@@ -32,9 +32,13 @@ echo ""
 
 # get the identity of sleep-v1:
 SLEEPV1_ID=$(kubectl get ciliumendpoints.cilium.io -l app=sleep,version=v1 -o jsonpath='{.items[0].status.identity.id}')
+SLEEPV2_ID=$(kubectl get ciliumendpoints.cilium.io -l app=sleep,version=v2 -o jsonpath='{.items[0].status.identity.id}')
 
 echo "Security identity for sleep-v1 is $SLEEPV1_ID. CiliumIdentity:"
 kubectl get ciliumidentities.cilium.io $SLEEPV1_ID -o yaml
+echo ""
+echo "Security identity for sleep-v1 is $SLEEPV2_ID. CiliumIdentity:"
+kubectl get ciliumidentities.cilium.io $SLEEPV2_ID -o yaml
 echo ""
 
 API_SERVER=$(kubectl get service -n default kubernetes -o=jsonpath='{.spec.clusterIP}')
@@ -78,6 +82,14 @@ while true; do
     fi
 done
 
+echo ""
+echo "Trying to curl from sleep-v2 to helloworld-v2. running:"
+echo kubectl exec $SLEEPV2POD -- curl -s http://helloworld-v2:5000/hello --max-time 2
+(kubectl exec $SLEEPV2POD -- curl -s http://helloworld-v2:5000/hello --max-time 2 && echo "Connection success.")|| echo "Connection Failed."
+echo ""
+echo ""
+
+
 # Try curl from the sleep-v2 pod we found to the helloworld-v1 deployment. This should fail according to policy
 # but will succeed because the ip-cache is not up to date.
 echo ""
@@ -95,6 +107,8 @@ echo ""
 echo "Current ip cache:"
 docker exec $NODEV1 /bin/bash -c 'crictl exec $(crictl ps --name cilium-agent -q) cilium map get cilium_ipcache'
 echo ""
+echo ""
+echo "We noted earlier that sleep-v1 had identity $SLEEPV1_ID, and sleep-v2 had $SLEEPV2_ID"
 echo "Specifically, note the identity of the sleep-v2 pod's IP:"
 docker exec $NODEV1 /bin/bash -c 'crictl exec $(crictl ps --name cilium-agent -q) cilium map get cilium_ipcache' | grep $ip
 echo "and compare to above ip cache and identity."
